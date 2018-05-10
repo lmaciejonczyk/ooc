@@ -2,12 +2,14 @@
 #define SET_H
 
 extern const void *Set;
+extern const void *Object;
 
-void *add(void *set, const void *element);
-void *find(void *set, const void *element);
-void *drop(void *set, const void *element);
-int contain(void *set, const void *element);
+void *add(void *_set, const void *_element);
+void *find(const void *_set, const void *_element);
+void *drop(void *_set, const void *_element);
+int contains(const void *_set, const void *_element);
 
-void *new_set(...);
+void *cnew(const void *type, ...);
+void cdelete(void *item);
 
 #endif

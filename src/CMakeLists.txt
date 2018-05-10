@@ -1,6 +1,9 @@
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-add_library(set STATIC set.cpp cnew.cpp)
+#set(GCC_COVERAGE_COMPILE_FLAGS "-fpermissive")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+
+add_library(set STATIC set.cpp)
 
 
