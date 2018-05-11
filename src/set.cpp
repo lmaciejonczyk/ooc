@@ -3,60 +3,60 @@
 
 #define MANY 10
 
-int _Set;
-int _Object;
-void* Set = &_Set;
-void* Object = &_Object;
+struct Set {
+  unsigned int count;
+};
+
+struct Object {
+  unsigned int count;
+  struct Set* in;
+};
+
+static const size_t _Set = sizeof(struct Set);
+static const size_t _Object = sizeof(struct Object);
+
+const void* Set = &_Set;
+const void* Object = &_Object;
 
 static int heap[MANY];
 
 void* cnew(const void* type, ...) {
-  int* p;
-  for (p = heap + 1; p < heap + MANY; p++) {
-    if (*p == 0) {
-      break;
-    }
-  }
-
-  assert(p < heap + MANY);
-  *p = MANY;
+  const size_t size = *(const size_t*)type;
+  void* p = calloc(1, size);
+  assert(p != NULL);
 
   return p;
 }
 
-void cdelete(void* _item) {
-  int* item = (int*)_item;
-
-  if (item > heap && item < heap + MANY) {
-    *item = 0;
-  }
-}
+void cdelete(void* _item) { free(_item); }
 
 void* add(void* _set, const void* _element) {
-  int* set = (int*)_set;
-  int* element = (int*)_element;
+  struct Set* set = (struct Set*)_set;
+  struct Object* element = (struct Object*)_element;
 
-  assert(set > heap && set < heap + MANY);
-  assert(*set == MANY);
-  assert(element > heap && element < heap + MANY);
+  assert(set != NULL);
+  assert(element != NULL);
 
-  if (*element == MANY) {
-    *element = set - heap;
+  if (element->in == NULL) {
+    element->in = set;
   } else {
-    assert(*element == set - heap);
+    assert(element->in == set);
   }
+
+  element->count++;
+  set->count++;
 
   return (void*)element;
 }
 
 void* find(const void* _set, const void* _element) {
-  const int* set = (const int*)_set;
-  const int* element = (const int*)_element;
+  const struct Set* set = (const struct Set*)_set;
+  const struct Object* element = (const struct Object*)_element;
 
-  assert(set > heap && set < heap + MANY);
-  assert(element > heap && element < heap + MANY);
+  assert(set != NULL);
+  assert(element != NULL);
 
-  return *element > 0 && *element < MANY ? (void*)element : NULL;
+  return element->in == set ? (void*)element : NULL;
 }
 
 int contains(const void* _set, const void* _element) {
@@ -64,8 +64,22 @@ int contains(const void* _set, const void* _element) {
 }
 
 void* drop(void* _set, const void* _element) {
-  int* element = (int*)find(_set, _element);
+  struct Set* set = (struct Set*)_set;
+  struct Object* element = (struct Object*)find(_set, _element);
+
   if (element != NULL) {
-    *element = MANY;
+    if (--element->count == 0) {
+      element->in = NULL;
+    }
+    set->count--;
   }
+
+  return element;
+}
+
+unsigned int count(const void* _set) {
+  struct Set* set = (struct Set*)_set;
+  assert(set != NULL);
+
+  return set->count;
 }

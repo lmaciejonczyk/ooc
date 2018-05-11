@@ -37,9 +37,22 @@ TEST_F(SetTest, find) {
 TEST_F(SetTest, drop) {
   void *elementA = add(_set, _elementA);
   void *elementB = add(_set, _elementB);
+  add(_set, _elementB);
 
   void *dropElement = drop(_set, elementA);
   EXPECT_EQ(dropElement, elementA);
   EXPECT_FALSE(contains(_set, elementA));
   EXPECT_TRUE(contains(_set, elementB));
+
+  drop(_set, _elementB);
+  EXPECT_TRUE(contains(_set, _elementB));
+  drop(_set, _elementB);
+  EXPECT_FALSE(contains(_set, _elementB));
+}
+
+TEST_F(SetTest, count) {
+  EXPECT_EQ(count(_set), 0);
+  add(_set, _elementA);
+  add(_set, _elementB);
+  EXPECT_EQ(count(_set), 2);
 }
