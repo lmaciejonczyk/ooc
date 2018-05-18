@@ -1,9 +1,9 @@
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-#set(GCC_COVERAGE_COMPILE_FLAGS "-fpermissive")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
-
 add_library(set STATIC set.cpp)
+add_library(string STATIC String.cpp cnew.cpp)
 
+# generate compile flag to json file
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
