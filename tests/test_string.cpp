@@ -27,3 +27,24 @@ TEST(StringTest, clone) {
   cdelete(b);
   cdelete(d);
 }
+
+TEST(StringTest, atom) {
+  void* a = cnew(String, "string");
+  void* b = cnew(String, "string");
+
+  EXPECT_EQ(a, b);
+  EXPECT_FALSE(differ(a, b));
+
+  void* c = cnew(String, "other string");
+  EXPECT_NE(a, c);
+  EXPECT_TRUE(differ(a, c));
+
+  void* d = clone(a);
+  EXPECT_EQ(a, d);
+  EXPECT_FALSE(differ(a, d));
+
+  cdelete(a);
+  cdelete(b);
+  cdelete(c);
+  cdelete(d);
+}

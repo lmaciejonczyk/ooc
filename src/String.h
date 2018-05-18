@@ -4,6 +4,8 @@
 struct String {
   struct Class* cclass;
   char* text;
+  struct String* next;
+  unsigned int count;
 };
 
 extern const void* String;
