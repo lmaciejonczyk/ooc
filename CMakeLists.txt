@@ -13,4 +13,5 @@ add_subdirectory(tests)
 enable_testing()
 add_test(TEST_SET test_set)
 add_test(TEST_STRING test_string)
+add_test(TEST_GEOMETRY test_geometry)
 
